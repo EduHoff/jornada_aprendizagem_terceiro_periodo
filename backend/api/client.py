@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from core.security import PasswordManager
+
+#comando útil: http://localhost:8000/docs
+pwd_manager = PasswordManager()
 
 def create_app() -> FastAPI:
     
@@ -13,9 +17,17 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    @app.get("/api/hello")
-    def hello():
-        return {"message": "Hello from FastAPI"}
+    @app.get("/api/test-auth")
+    def test_auth():
+        senha = "senha123"
+        hash_str = pwd_manager.hash_password(senha)
+        valido = pwd_manager.verify_password(hash_str, senha)
+        
+        return {
+            "status": "Conectado com security.py!",
+            "hash_gerado": hash_str,
+            "validacao": valido
+        }
 
     return app
 
