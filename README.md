@@ -19,5 +19,4 @@ docker compose down
 - Danilo Odelon Wagner
 - Eduardo Hoffmann do Carmo Silva
 - Felipe Alves Bueno
-- Maria Eduarda Franco
 - Pedro Augusto Oliveira
