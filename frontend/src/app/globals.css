@@ -17,3 +17,8 @@ body {
   color: var(--text);
   font-family: Arial, sans-serif;
 }
+
+button:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
