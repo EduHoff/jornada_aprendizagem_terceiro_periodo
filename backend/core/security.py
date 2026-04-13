@@ -20,6 +20,6 @@ class PasswordManager:
 SECRET_TOKEN_KEY = os.getenv("SECRET_TOKEN_KEY")
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(hours=8)
+    expire = datetime.now(timezone.utc) + timedelta(hours=1)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_TOKEN_KEY, algorithm="HS256")
