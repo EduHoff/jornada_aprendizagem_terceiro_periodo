@@ -8,6 +8,10 @@ export class User {
     private role: UserRole
   ) {}
 
+  getName(): string {
+    return this.name;
+  }
+
   getEmail(): string {
     return this.email;
   }
@@ -21,6 +25,6 @@ export class User {
   }
 
   isAdmin(): boolean {
-    return this.role === UserRole.ADMIN;
+    return String(this.role).toLowerCase() === "admin";
   }
 }

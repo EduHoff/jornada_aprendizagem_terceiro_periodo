@@ -14,6 +14,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
+    if (!email || !password) {
+      alert("Por favor, preencha o e-mail e a senha.");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -24,8 +29,9 @@ export default function LoginPage() {
       } else {
         router.push("/orcamento");
       }
-    } catch {
-      alert("Erro ao logar");
+    } catch (error) {
+      console.error("Erro no login:", error);
+      alert("E-mail ou senha incorretos.");
     } finally {
       setLoading(false);
     }
@@ -34,8 +40,6 @@ export default function LoginPage() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        
-        {/* LOGO */}
         <Image
           src="/Logo-FAST-Ariam.png"
           alt="FAST Logo"
@@ -49,6 +53,8 @@ export default function LoginPage() {
         <input
           style={styles.input}
           placeholder="Email"
+          type="email"
+          value={email} 
           onChange={(e) => setEmail(e.target.value)}
         />
 
@@ -56,6 +62,7 @@ export default function LoginPage() {
           style={styles.input}
           type="password"
           placeholder="Senha"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 

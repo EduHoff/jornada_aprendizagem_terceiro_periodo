@@ -4,9 +4,9 @@ export class LoginUserUseCase {
   constructor(private repository: UserRepository) {}
 
   async execute(email: string, password: string) {
-    const user = await this.repository.findByEmail(email);
+    const user = await this.repository.login(email, password);
 
-    if (!user || user.getPassword() !== password) {
+    if (!user) {
       throw new Error("Credenciais inválidas");
     }
 
