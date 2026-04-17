@@ -6,6 +6,14 @@ import { styles } from "../styles";
 export function StepCarga({ next, back }: any) {
   const [peso, setPeso] = useState("");
 
+  function handleNext() {
+    if (!peso || Number(peso) <= 0) {
+      alert("Peso inválido");
+    }
+
+    next({ peso });
+  }
+
   return (
     <>
       <input
@@ -14,7 +22,7 @@ export function StepCarga({ next, back }: any) {
         onChange={(e) => setPeso(e.target.value)}
       />
 
-      <button style={styles.button} onClick={() => next({ peso })}>
+      <button style={styles.button} onClick={handleNext}>
         Próximo
       </button>
 
