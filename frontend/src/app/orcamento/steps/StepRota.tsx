@@ -7,6 +7,15 @@ export function StepRota({ next, back }: any) {
   const [origem, setOrigem] = useState("");
   const [destino, setDestino] = useState("");
 
+  function handleNext() {
+    if (!origem || !destino) {
+      alert("Preencha origem e destino");
+      return;
+    }
+
+    next({ origem, destino });
+  }
+
   return (
     <>
       <input
@@ -21,7 +30,7 @@ export function StepRota({ next, back }: any) {
         onChange={(e) => setDestino(e.target.value)}
       />
 
-      <button style={styles.button} onClick={() => next({ origem, destino })}>
+      <button style={styles.button} onClick={handleNext}>
         Próximo
       </button>
 
