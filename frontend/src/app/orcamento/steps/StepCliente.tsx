@@ -5,6 +5,16 @@ import { styles } from "../styles";
 
 export function StepCliente({ next }: any) {
   const [nome, setNome] = useState("");
+  const [erro, setErro] = useState("");
+
+  function handleNext() {
+    if (!nome.trim()) {
+      setErro("Nome do cliente é obrigatório");
+      return;
+    }
+
+    next({ nome });
+  }
 
   return (
     <>
@@ -14,7 +24,9 @@ export function StepCliente({ next }: any) {
         onChange={(e) => setNome(e.target.value)}
       />
 
-      <button style={styles.button} onClick={() => next({ nome })}>
+      {erro && <span style={{ color: "red" }}>{erro}</span>}
+
+      <button style={styles.button} onClick={handleNext}>
         Próximo
       </button>
     </>
