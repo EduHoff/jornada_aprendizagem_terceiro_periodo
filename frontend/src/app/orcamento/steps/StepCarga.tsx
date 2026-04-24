@@ -9,6 +9,7 @@ export function StepCarga({ next, back }: any) {
   function handleNext() {
     if (!peso || Number(peso) <= 0) {
       alert("Peso inválido");
+      return;
     }
 
     next({ peso });
