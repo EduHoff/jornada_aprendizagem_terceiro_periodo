@@ -5,6 +5,12 @@ class JSONScanner(ScannerInterface):
 
     def scan(self, file_content: bytes):
         
-        #lógica do scanner vai ser aqui
+        raw_text = json.loads(file_content.decode('utf-8'))
         
-        return
+        # aqui vai ser tratado os dados desejados
+
+        return {
+            "source": "JSON",
+            "raw_data": raw_text,
+            "items": []
+        }
