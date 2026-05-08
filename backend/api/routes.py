@@ -1,5 +1,6 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field, EmailStr
+from domain.entities.purchase_order import PurchaseOrder
 from infra.scanner.json_scanner import JSONScanner
 from infra.scanner.pdf_scanner import PDFScanner
 from infra.scanner.scanner_interface import ScannerInterface
@@ -80,7 +81,7 @@ async def scan(file: UploadFile = File(...)):
         case _:
             raise HTTPException(status_code=415, detail=f"Extensão .{file_extension} não suportada. Envie PDF ou JSON.")
         
-    result = scanner.scan(content)
+    result: PurchaseOrder = scanner.scan(content)
 
-    return result
+    return result.to_dict()
 

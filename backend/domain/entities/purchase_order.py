@@ -36,3 +36,20 @@ class PurchaseOrder:
     @property
     def total_products_quantity(self) -> int:
         return sum(item.quantity for item in self._items)
+    
+    def to_dict(self):
+        return {
+            "order_number": self.order_number,
+            "customer_name": self.customer_name,
+            "city": self.city,
+            "uf": self.uf.abbreviation,
+            "items": [
+                {
+                    "code": item.code,
+                    "description": item.description,
+                    "quantity": item.quantity,
+                    "unit": item.unit.name,
+                    "category": item.category.value
+                } for item in self.items
+            ]
+        }
