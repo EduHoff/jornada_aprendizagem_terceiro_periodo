@@ -16,14 +16,7 @@ export function StepResumo({ data, back }: any) {
 
   return (
     <>
-      <div
-        style={{
-          background: "#EFF6FF",
-          padding: "15px",
-          borderRadius: "8px",
-          border: "1px solid #93C5FD"
-        }}
-      >
+      <div style={styles.summaryCard}>
         <p><strong>Cliente:</strong> {data.nome}</p>
         <p><strong>Origem:</strong> {data.origem}</p>
         <p><strong>Destino:</strong> {data.destino}</p>
