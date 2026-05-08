@@ -46,4 +46,12 @@ export const styles = {
       border: "none",
       cursor: "pointer",
     },
+
+    summaryCard: {
+      backgroundColor: "#EFF6FF",
+      border: "1px solid #93C5FD",
+      padding: "20px",
+      borderRadius: "10px",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.05)"
+    }
   };
