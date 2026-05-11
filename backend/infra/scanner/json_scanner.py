@@ -24,20 +24,19 @@ class JSONScanner(ScannerInterface):
             code = item.get("code", "")
             
             prefix = code.split('-')[0].upper()
-            
             match prefix:
                 case "LSG":
-                    category = Category.GONDOLAS
+                    category = Category.LSG
                 case "MOB":
-                    category = Category.MOBILIARIOS
+                    category = Category.MOBILIAS
                 case "CKO" | "CK":
                     category = Category.CHECKOUTS
                 case "RS":
                     category = Category.RACK_SLIM
                 case "PAL":
-                    category = Category.PORTA_PALLETS_MONTADOS
+                    category = Category.PORTA_PALLETS
                 case _:
-                    category = Category.GONDOLAS
+                    category = Category.REFRIGERATED
 
             product = Product(
                 code=code,

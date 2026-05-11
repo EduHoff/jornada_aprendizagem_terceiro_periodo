@@ -23,3 +23,12 @@ def create_access_token(data: dict):
     expire = datetime.now(timezone.utc) + timedelta(hours=1)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_TOKEN_KEY, algorithm="HS256")
+
+def decode_access_token(token: str) -> dict | None:
+    try:
+        payload = jwt.decode(token, SECRET_TOKEN_KEY, algorithms=["HS256"])
+        if datetime.fromtimestamp(payload["exp"], tz=timezone.utc) < datetime.now(timezone.utc):
+            return None
+        return payload
+    except jwt.PyJWTError:
+        return None

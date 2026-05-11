@@ -1,3 +1,5 @@
+from domain.entities.user import User
+from domain.enums.user_role import UserRole
 from core.database import get_supabase
 from core.security import PasswordManager
 from datetime import datetime
@@ -20,7 +22,13 @@ class UserService:
         response = self.db.table("usuarios").insert(user_data).execute()
 
         if response.data:
-            return response.data[0]
+            u = response.data[0]
+            return User(
+                name=u["nome"],
+                email=u["email"],
+                password=u["senha_hash"],
+                role=UserRole(u["role"])
+            )
         return None
     
     def verify_user_password(self, plain_password: str, hashed_password: str) -> bool:
@@ -30,7 +38,16 @@ class UserService:
         response = self.db.table("usuarios").select("*").eq("email", email).execute()
         
         if response.data:
-            return response.data[0]
+            u = response.data[0]
+            user_obj = User(
+                name=u["nome"],
+                email=u["email"],
+                password=u["senha_hash"],
+                role=UserRole(u["role"])
+            )
+
+            user_obj.id = u["id"]
+            return user_obj
         return None
     
     async def update_last_login(self, user_id: str):
