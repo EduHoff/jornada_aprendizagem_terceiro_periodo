@@ -10,7 +10,7 @@ from domain.enums.category import Category
 
 class PDFScanner(ScannerInterface):
 
-    def scan(self, file_content: bytes) -> PurchaseOrder:
+    def scan(self, file_content: bytes, created_by_id: str) -> PurchaseOrder:
         file_stream = io.BytesIO(file_content)
         reader = PdfReader(file_stream)
         raw_text = ""
@@ -35,7 +35,9 @@ class PDFScanner(ScannerInterface):
             order_number=order_num,
             customer_name=customer,
             city=city,
-            uf=uf_enum
+            uf=uf_enum,
+            created_by_id=created_by_id,
+            total_volume_m3=0.0
         )
 
         item_pattern = re.compile(r"(\d{2})\n([A-Z]{3}-\d{3})\n(.+?)\n\s*(\d+(?:\.?\d*))\n\s*([A-Z]{2})")

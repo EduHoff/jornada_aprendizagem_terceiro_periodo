@@ -105,7 +105,30 @@ async def scan(file: UploadFile = File(...), current_user: dict = Depends(get_cu
         case _:
             raise HTTPException(status_code=415, detail=f"Extensão .{file_extension} não suportada. Envie PDF ou JSON.")
         
-    result: PurchaseOrder = scanner.scan(content)
+    result: PurchaseOrder = scanner.scan(content, created_by_id=current_user["id"])
 
     return result.to_dict()
+
+
+@router.post("/orders/calculate")
+async def calculate_volume(order_data: dict, current_user: dict = Depends(get_current_user)):
+    # 1. Transforma o dict de volta em PurchaseOrder
+    # 2. Roda o método que soma o volume de cada item
+    # 3. Retorna o PurchaseOrder + o Volume Total
+    pass
+
+
+@router.post("/orders/quote")
+async def final_quote(quote_request: dict, current_user: dict = Depends(get_current_user)):
+    # 1. Recebe Volume vs Capacidade dos Veículos
+    # 2. Calcula o valor total do frete
+    # 3. Retorna o resumo financeiro
+    pass
+
+
+@router.post("/orders/save")
+async def save_order(final_data: dict, current_user: dict = Depends(get_current_user)):
+    # 1. Insere na tabela 'pedidos' ou 'historico_logistico'
+    # 2. Retorna confirmação de sucesso
+    pass
 
