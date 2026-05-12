@@ -1,14 +1,16 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field, EmailStr
 from domain.entities.purchase_order import PurchaseOrder
 from infra.scanner.json_scanner import JSONScanner
 from infra.scanner.pdf_scanner import PDFScanner
 from infra.scanner.scanner_interface import ScannerInterface
-from core.security import create_access_token
+from core.security import create_access_token, decode_access_token
 from services.user_service import UserService
 
 router = APIRouter()
 user_service = UserService()
+security = HTTPBearer()
 
 class UserSchema(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
@@ -18,11 +20,25 @@ class UserSchema(BaseModel):
     password: str = Field(..., min_length=6, description="A senha deve ter no mínimo 6 caracteres.")
     role: str = Field(..., min_length=1)
 
+
 class LoginSchema(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
     
     email: EmailStr = Field(..., description="E-mail do usuário.")
     password: str = Field(..., min_length=1, description="Senha do usuário.")
+
+
+async def get_current_user(auth: HTTPAuthorizationCredentials = Depends(security)):
+
+    payload = decode_access_token(auth.credentials)
+    if not payload:
+        raise HTTPException(
+            status_code=401,
+            detail="Sessão inválida ou expirada. Por favor, faça login novamente.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return payload
+
 
 @router.post("/register")
 async def register(data: UserSchema):
@@ -31,12 +47,6 @@ async def register(data: UserSchema):
         raise HTTPException(status_code=400, detail="Erro ao criar usuário.")
     return user
 
-@router.get("/users/{email}")
-async def get_user(email: str):
-    user = await user_service.get_by_email(email)
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
-    return user
 
 @router.post("/login")
 async def login(credentials: LoginSchema):
@@ -67,8 +77,21 @@ async def login(credentials: LoginSchema):
         "token_type": "bearer"
     }
 
+'''
+ROTA EXCLUÍDA POR FALTA DE PROPÓSITO
+normalmente eu iria apenas remover direto, porém por segurança vou manter como um comentário por enquanto
+
+@router.get("/users/{email}")
+async def get_user(email: str,  current_user: dict = Depends(get_current_user)):
+    user = await user_service.get_by_email(email)
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+    return user
+'''
+
+
 @router.post("/scan")
-async def scan(file: UploadFile = File(...)):
+async def scan(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
 
     content = await file.read()
     file_extension = file.filename.split(".")[-1].lower()

@@ -17,8 +17,10 @@ class PasswordManager:
             print(f"DEBUG ARGON2: Erro na verificação: {e}")
             return False
 
+
 SECRET_TOKEN_KEY = os.getenv("SECRET_TOKEN_KEY")
-def create_access_token(data: dict):
+
+def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(hours=1)
     to_encode.update({"exp": expire})
