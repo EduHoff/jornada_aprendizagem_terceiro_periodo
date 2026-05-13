@@ -9,7 +9,7 @@ class Product:
         quantity: int, 
         unit: UnitType, 
         category: Category,
-        density_factor: float = 0.0,  # Qtd/m3 (Method A)
+        items_per_m3: float = 0.0,  # Qtd/m3 (Method A)
         length: float = 0.0,          # (Method B)
         width: float = 0.0,           # (Method B)
         height: float = 0.0           # (Method B)
@@ -19,7 +19,7 @@ class Product:
         self._quantity = quantity
         self._unit = unit
         self._category = category
-        self._density_factor = density_factor
+        self._items_per_m3 = items_per_m3
         self._length = length
         self._width = width
         self._height = height
@@ -40,7 +40,7 @@ class Product:
     def category(self): return self._category
 
     @property
-    def density_factor(self): return self._density_factor
+    def items_per_m3(self): return self._items_per_m3
 
     @quantity.setter
     def quantity(self, value):

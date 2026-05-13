@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field, EmailStr
+from services.logistics_service import LogisticsService
 from domain.entities.purchase_order import PurchaseOrder
 from infra.scanner.json_scanner import JSONScanner
 from infra.scanner.pdf_scanner import PDFScanner
@@ -77,18 +78,6 @@ async def login(credentials: LoginSchema):
         "token_type": "bearer"
     }
 
-'''
-ROTA EXCLUÍDA POR FALTA DE PROPÓSITO
-normalmente eu iria apenas remover direto, porém por segurança vou manter como um comentário por enquanto
-
-@router.get("/users/{email}")
-async def get_user(email: str,  current_user: dict = Depends(get_current_user)):
-    user = await user_service.get_by_email(email)
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
-    return user
-'''
-
 
 @router.post("/scan")
 async def scan(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
@@ -112,10 +101,14 @@ async def scan(file: UploadFile = File(...), current_user: dict = Depends(get_cu
 
 @router.post("/orders/calculate")
 async def calculate_volume(order_data: dict, current_user: dict = Depends(get_current_user)):
-    # 1. Transforma o dict de volta em PurchaseOrder
-    # 2. Roda o método que soma o volume de cada item
-    # 3. Retorna o PurchaseOrder + o Volume Total
-    pass
+    order = PurchaseOrder.from_dict(order_data)
+    
+    service = LogisticsService()
+    total_volume = service.calculate_total_volume(order)
+    
+    order.total_volume_m3 = total_volume
+    
+    return order.to_dict()
 
 
 @router.post("/orders/quote")

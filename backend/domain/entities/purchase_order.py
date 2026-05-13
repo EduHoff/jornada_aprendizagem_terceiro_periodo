@@ -38,8 +38,14 @@ class PurchaseOrder:
         return self._created_by_id
     
     @property
-    def total_volume_m3(self) -> str:
+    def total_volume_m3(self) -> float:
         return self._total_volume_m3
+    
+    @total_volume_m3.setter
+    def total_volume_m3(self, value: float):
+        if value < 0:
+            raise ValueError("O volume total não pode ser negativo")
+        self._total_volume_m3 = value
 
     @property
     def items(self) -> List[Product]:
