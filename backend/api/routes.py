@@ -1,6 +1,10 @@
+import math
+
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field, EmailStr
+from domain.entities.vehicle import Vehicle
+from domain.enums.vehicle_type import VehicleType
 from services.logistics_service import LogisticsService
 from domain.entities.purchase_order import PurchaseOrder
 from infra.scanner.json_scanner import JSONScanner
@@ -107,6 +111,17 @@ async def calculate_volume(order_data: dict, current_user: dict = Depends(get_cu
     total_volume = service.calculate_total_volume(order)
     
     order.total_volume_m3 = total_volume
+
+    remaining_volume = total_volume
+
+    if remaining_volume >= 60:
+        num_carretas = int(remaining_volume // 60)
+        order.add_vehicle(Vehicle(60.0, VehicleType.CARRETA, num_carretas))
+        remaining_volume %= 60
+
+    if remaining_volume > 0:
+        num_trucks = math.ceil(remaining_volume / 45)
+        order.add_vehicle(Vehicle(45.0, VehicleType.TRUCK, num_trucks))
     
     return order.to_dict()
 
