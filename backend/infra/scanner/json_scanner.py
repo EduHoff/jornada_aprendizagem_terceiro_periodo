@@ -47,7 +47,8 @@ class JSONScanner(ScannerInterface):
                 length=float(item.get("length", 0.0)),
                 width=float(item.get("width", 0.0)),
                 height=float(item.get("height", 0.0)),
-                density_factor=float(item.get("density_factor", 0.0))
+                items_per_m3=float(item.get("items_per_m3", 0.0)),
+                total_freight=0.0
             )
             order.add_item(product)
 

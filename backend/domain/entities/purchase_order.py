@@ -14,28 +14,49 @@ class PurchaseOrder:
         self._uf = uf
         self._created_by_id = created_by_id
         self._total_volume_m3 = total_volume_m3
+        self._total_freight = 0.0
         self._items: List[Product] = []
         self._vehicles: List[Vehicle] = []
 
     @property
     def order_number(self) -> str:
         return self._order_number
+    
+    @order_number.setter
+    def order_number(self, value: str):
+        self._order_number = value
 
     @property
     def customer_name(self) -> str:
         return self._customer_name
+    
+    @customer_name.setter
+    def customer_name(self, value: str):
+        self._customer_name = value
 
     @property
     def city(self) -> str:
         return self._city
+    
+    @city.setter
+    def city(self, value: str):
+        self._city = value
 
     @property
     def uf(self) -> UF:
         return self._uf
     
+    @uf.setter
+    def uf(self, value: UF):
+        self._uf = value
+    
     @property
     def created_by_id(self) -> str:
         return self._created_by_id
+    
+    @created_by_id.setter
+    def created_by_id(self, value: str):
+        self._created_by_id = value
     
     @property
     def total_volume_m3(self) -> float:
@@ -48,12 +69,20 @@ class PurchaseOrder:
         self._total_volume_m3 = value
 
     @property
+    def total_freight(self) -> float:
+        return self._total_freight
+
+    @total_freight.setter
+    def total_freight(self, value: float):
+        self._total_freight = round(value, 2)
+
+    @property
     def items(self) -> List[Product]:
         return self._items
     
     @property
     def vehicles(self) -> List[Vehicle]:
-        return self._vehicles
+        return self._vehicles 
 
     def add_item(self, product: Product):
         self._items.append(product)
@@ -65,6 +94,19 @@ class PurchaseOrder:
     def total_products_quantity(self) -> int:
         return sum(item.quantity for item in self._items)
     
+    #capacity_ref 60 -> Carreta
+    #capacity_ref 45 -> Container/truck
+    def get_linear_meters(self, capacity_ref: float = 60.0) -> float:
+        if self.total_volume_m3 == 0:
+            return 0.0
+        return (self.total_volume_m3 * 12) / capacity_ref
+
+    def get_meters_nvia(self, capacity_ref: float = 60.0) -> float:
+        return round(self.get_linear_meters(capacity_ref) * 1.10, 2)
+
+    def get_meters_venda(self, capacity_ref: float = 60.0) -> float:
+        return round(self.get_linear_meters(capacity_ref) * 1.20, 2)
+    
     def to_dict(self):
         return {
             "order_number": self.order_number,
@@ -73,6 +115,7 @@ class PurchaseOrder:
             "uf": self.uf.abbreviation,
             "created_by_id": self.created_by_id,
             "total_volume_m3": self.total_volume_m3,
+            "total_freight": self.total_freight,
             "items": [
                 {
                     "code": item.code,
@@ -94,7 +137,8 @@ class PurchaseOrder:
             city=data["city"],
             uf=UF[data["uf"]],
             created_by_id=data["created_by_id"],
-            total_volume_m3=float(data["total_volume_m3"])
+            total_volume_m3=float(data["total_volume_m3"]),
+            total_freight=float(data.get("total_freight", 0.0))
         )
 
         for item in data.get("items", []):

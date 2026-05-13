@@ -37,7 +37,8 @@ class PDFScanner(ScannerInterface):
             city=city,
             uf=uf_enum,
             created_by_id=created_by_id,
-            total_volume_m3=0.0
+            total_volume_m3=0.0,
+            total_freight=0.0
         )
 
         item_pattern = re.compile(r"(\d{2})\n([A-Z]{3}-\d{3})\n(.+?)\n\s*(\d+(?:\.?\d*))\n\s*([A-Z]{2})")
