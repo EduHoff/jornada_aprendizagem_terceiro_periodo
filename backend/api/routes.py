@@ -105,8 +105,11 @@ async def scan(file: UploadFile = File(...), current_user: dict = Depends(get_cu
 
 @router.post("/orders/calculate")
 async def calculate_volume(order_data: dict, current_user: dict = Depends(get_current_user)):
-    order = PurchaseOrder.from_dict(order_data)
-    
+    try:
+        order = PurchaseOrder.from_dict(order_data)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Erro na estrutura do pedido: {str(e)}")
+
     service = LogisticsService()
     total_volume = service.calculate_total_volume(order)
     
@@ -128,10 +131,15 @@ async def calculate_volume(order_data: dict, current_user: dict = Depends(get_cu
 
 @router.post("/orders/quote")
 async def final_quote(quote_request: dict, current_user: dict = Depends(get_current_user)):
-    # 1. Recebe Volume vs Capacidade dos Veículos
-    # 2. Calcula o valor total do frete
-    # 3. Retorna o resumo financeiro
-    pass
+    try:
+        order = PurchaseOrder.from_dict(quote_request)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Erro na estrutura do pedido: {str(e)}")
+    
+    service = LogisticsService()
+    result = service.calculate_final_quote(order)
+
+    return result.to_dict()
 
 
 @router.post("/orders/save")

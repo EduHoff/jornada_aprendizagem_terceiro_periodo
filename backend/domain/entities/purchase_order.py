@@ -7,14 +7,14 @@ from .product import Product
 from domain.enums.uf import UF 
 
 class PurchaseOrder:
-    def __init__(self, order_number: str, customer_name: str, city: str, uf: UF, created_by_id: str, total_volume_m3: float):
+    def __init__(self, order_number: str, customer_name: str, city: str, uf: UF, created_by_id: str, total_volume_m3: float, total_freight: float = 0.0):
         self._order_number = order_number
         self._customer_name = customer_name
         self._city = city
         self._uf = uf
         self._created_by_id = created_by_id
         self._total_volume_m3 = total_volume_m3
-        self._total_freight = 0.0
+        self._total_freight = total_freight
         self._items: List[Product] = []
         self._vehicles: List[Vehicle] = []
 
