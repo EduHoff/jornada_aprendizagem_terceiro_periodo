@@ -3,6 +3,7 @@ import math
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field, EmailStr
+from infra.repositories.order_repository import OrderRepository
 from domain.entities.vehicle import Vehicle
 from domain.enums.vehicle_type import VehicleType
 from services.logistics_service import LogisticsService
@@ -143,8 +144,18 @@ async def final_quote(quote_request: dict, current_user: dict = Depends(get_curr
 
 
 @router.post("/orders/save")
-async def save_order(final_data: dict, current_user: dict = Depends(get_current_user)):
-    # 1. Insere na tabela 'pedidos' ou 'historico_logistico'
-    # 2. Retorna confirmação de sucesso
-    pass
+async def save_order(order_data: dict, current_user: dict = Depends(get_current_user)):    
+    try:
+        order = PurchaseOrder.from_dict(order_data)
 
+        repository = OrderRepository()
+
+        order_id = repository.save(order)
+    
+        return {
+            "status": "success", 
+            "message": "Pedido salvo com sucesso",
+            "id_interno": order_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
