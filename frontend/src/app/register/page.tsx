@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AuthService } from "src/presentation/services/AuthService";
-import { UserRole } from "src/domain/enums/UserRole";
+import { AuthService } from "presentation/services/AuthService";
+import { UserRole } from "domain/enums/UserRole";
 import Image from "next/image";
 
 export default function RegisterPage() {

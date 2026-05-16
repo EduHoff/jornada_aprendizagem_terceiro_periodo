@@ -1,7 +1,7 @@
-import { UserRepository } from "src/infra/repositories/UserRepository";
-import { CreateUserUseCase } from "src/application/use-cases/CreateUserUseCase";
-import { LoginUserUseCase } from "src/application/use-cases/LoginUserUseCase";
-import { CreateUserDTO } from "src/application/dtos/CreateUserDTO";
+import { UserRepository } from "infra/repositories/UserRepository";
+import { CreateUserUseCase } from "application/use-cases/CreateUserUseCase";
+import { LoginUserUseCase } from "application/use-cases/LoginUserUseCase";
+import { CreateUserDTO } from "application/dtos/CreateUserDTO";
 
 export class AuthService {
   private repository = new UserRepository();

@@ -1,4 +1,4 @@
-import { UserRepository } from "src/infra/repositories/UserRepository";
+import { UserRepository } from "infra/repositories/UserRepository";
 
 export class LoginUserUseCase {
   constructor(private repository: UserRepository) {}
