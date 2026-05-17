@@ -17,13 +17,15 @@ class JSONScanner(ScannerInterface):
         except KeyError:
             uf_enum = UF.PR 
         
+        total_volume = float(data.get("total_volume_m3", 0.0))
+
         order = PurchaseOrder(
             order_number=data.get("order_number", "N/A"),
             customer_name=data.get("customer_name", "Desconhecido"),
             city=data.get("city", "Não informada"),
             uf=uf_enum,
             created_by_id=created_by_id,
-            total_volume_m3=0.0
+            total_volume_m3=total_volume
         )
 
         for item in data.get("items", []):
@@ -47,8 +49,7 @@ class JSONScanner(ScannerInterface):
                 length=float(item.get("length", 0.0)),
                 width=float(item.get("width", 0.0)),
                 height=float(item.get("height", 0.0)),
-                items_per_m3=float(item.get("items_per_m3", 0.0)),
-                total_freight=0.0
+                items_per_m3=float(item.get("items_per_m3", 0.0))
             )
             order.add_item(product)
 

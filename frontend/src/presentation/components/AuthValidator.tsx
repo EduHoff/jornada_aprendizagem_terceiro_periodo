@@ -35,6 +35,7 @@ export default function AuthValidator({ children }: { children: React.ReactNode 
       if (token || savedUser) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        localStorage.removeItem("purchase_order");
       }
       
       if (pathname !== "/login" && pathname !== "/register") {

@@ -2,6 +2,7 @@
 
 import { styles } from "../styles";
 import { WizardData } from "../types";
+import { getUFAbbreviation } from "@/domain/enums/UF";
 
 interface StepRevisaoProps {
   data: WizardData;
@@ -9,11 +10,7 @@ interface StepRevisaoProps {
   back: () => void;
 }
 
-export function StepRevisao({
-  data,
-  next,
-  back,
-}: StepRevisaoProps) {
+export function StepRevisao({ data, next, back }: StepRevisaoProps) {
   const purchaseOrder = data.purchaseOrder;
 
   return (
@@ -25,18 +22,16 @@ export function StepRevisao({
 
       <div style={styles.summaryCard}>
         <p>
-          <strong>Pedido:</strong>{" "}
-          {purchaseOrder?.order_number}
+          <strong>Pedido:</strong> {purchaseOrder?.order_number}
         </p>
 
         <p>
-          <strong>Cliente:</strong>{" "}
-          {purchaseOrder?.customer_name}
+          <strong>Cliente:</strong> {purchaseOrder?.customer_name}
         </p>
 
         <p>
           <strong>Cidade:</strong>{" "}
-          {purchaseOrder?.city} - {purchaseOrder?.uf}
+          {purchaseOrder?.city} - {purchaseOrder ? getUFAbbreviation(purchaseOrder.uf) : ""}
         </p>
       </div>
 
@@ -52,31 +47,26 @@ export function StepRevisao({
           </thead>
 
           <tbody>
-            {purchaseOrder?.items?.map(
-              (item, index: number) => (
-                <tr key={index}>
-                  <td>{item.code}</td>
-                  <td>{item.description}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.unit}</td>
-                </tr>
-              )
-            )}
+            {purchaseOrder?.items?.map((item, index: number) => (
+              <tr key={index}>
+                <td>{item.code}</td>
+                <td>{item.description}</td>
+                <td>{item.quantity}</td>
+                <td>{String(item.unit)}</td> 
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
       <div style={styles.buttonGroup}>
-        <button
-          style={styles.secondaryButton}
-          onClick={back}
-        >
+        <button style={styles.secondaryButton} onClick={back}>
           Voltar
         </button>
 
         <button
           style={styles.button}
-          onClick={() => next({})}
+          onClick={() => next({ purchaseOrder })}
         >
           Próximo
         </button>

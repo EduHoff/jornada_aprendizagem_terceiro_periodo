@@ -1,16 +1,11 @@
-import { User } from "domain/entities/User";
-import { UserRole } from "domain/enums/UserRole";
-import { UserRepository } from "infra/repositories/UserRepository";
+import { User } from "@/domain/entities/User";
+import { Routes } from "@/api/Routes";
+import { CreateUserDTO } from "../dtos/CreateUserDTO";
 
 export class CreateUserUseCase {
-  constructor(private repository: UserRepository) {}
+  constructor() {}
 
-  async execute(data: {
-    name: string;
-    email: string;
-    password: string;
-    role: UserRole;
-  }) {
+  async execute(data: CreateUserDTO): Promise<User> {
     const user = new User(
       data.name,
       data.email,
@@ -18,6 +13,6 @@ export class CreateUserUseCase {
       data.role
     );
 
-    return await this.repository.save(user);
+    return await Routes.register(user);
   }
 }

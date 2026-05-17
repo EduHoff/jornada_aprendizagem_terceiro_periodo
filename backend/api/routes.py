@@ -111,6 +111,8 @@ async def calculate_volume(order_data: dict, current_user: dict = Depends(get_cu
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Erro na estrutura do pedido: {str(e)}")
 
+    order._vehicles = []
+
     service = LogisticsService()
     total_volume = service.calculate_total_volume(order)
     
