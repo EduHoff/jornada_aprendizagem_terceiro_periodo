@@ -54,17 +54,17 @@ export function StepVolumetria({
       <div style={styles.summaryCard}>
         <p>
           <strong>Volume Total:</strong>{" "}
-          {result.total_volume_m3} m³
+          {result?.total_volume_m3} m³
         </p>
 
         <p>
           <strong>Veículo sugerido:</strong>{" "}
-          {result.vehicle_type}
+          {result?.vehicle_type}
         </p>
 
         <p>
           <strong>Qtd Veículos:</strong>{" "}
-          {result.vehicle_quantity}
+          {result?.vehicle_quantity}
         </p>
       </div>
 
@@ -78,11 +78,13 @@ export function StepVolumetria({
 
         <button
           style={styles.button}
-          onClick={() =>
+          onClick={() => {
+            if (!result) return;
+
             next({
               calculation: result,
-            })
-          }
+            });
+          }}
         >
           Próximo
         </button>

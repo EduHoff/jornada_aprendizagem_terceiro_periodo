@@ -57,27 +57,27 @@ export function StepFinal({
       <div style={styles.summaryCard}>
         <p>
           <strong>Pedido:</strong>{" "}
-          {data.purchaseOrder.order_number}
+          {data.purchaseOrder?.order_number}
         </p>
 
         <p>
           <strong>Cliente:</strong>{" "}
-          {data.purchaseOrder.customer_name}
+          {data.purchaseOrder?.customer_name}
         </p>
 
         <p>
           <strong>Volume:</strong>{" "}
-          {data.calculation.total_volume_m3} m³
+          {data.calculation?.total_volume_m3} m³
         </p>
 
         <p>
           <strong>Veículo:</strong>{" "}
-          {data.calculation.vehicle_type}
+          {data.calculation?.vehicle_type}
         </p>
 
         <p>
           <strong>Frete Final:</strong>{" "}
-          R$ {data.quote.total_freight}
+          R$ {data.quote?.total_freight}
         </p>
       </div>
 

@@ -77,4 +77,10 @@ export const styles = {
     cursor: "pointer",
     fontWeight: "bold",
   },
+
+  title: {
+    fontSize: "32px",
+    fontWeight: "bold",
+    color: "#111827",
+  },
 };

@@ -26,17 +26,17 @@ export function StepRevisao({
       <div style={styles.summaryCard}>
         <p>
           <strong>Pedido:</strong>{" "}
-          {purchaseOrder.order_number}
+          {purchaseOrder?.order_number}
         </p>
 
         <p>
           <strong>Cliente:</strong>{" "}
-          {purchaseOrder.customer_name}
+          {purchaseOrder?.customer_name}
         </p>
 
         <p>
           <strong>Cidade:</strong>{" "}
-          {purchaseOrder.city} - {purchaseOrder.uf}
+          {purchaseOrder?.city} - {purchaseOrder?.uf}
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export function StepRevisao({
           </thead>
 
           <tbody>
-            {purchaseOrder.items.map(
+            {purchaseOrder?.items?.map(
               (item, index: number) => (
                 <tr key={index}>
                   <td>{item.code}</td>

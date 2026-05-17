@@ -1,7 +1,14 @@
 const API_URL = "http://localhost:8000";
 
+import {
+  CalculationResult,
+  QuoteResult,
+} from "@/app/orcamento/types";
+
+import { PurchaseOrder } from "@/domain/entities/PurchaseOrder";
+
 export class ApiService {
-  static async uploadPDF(file: File) {
+  static async uploadPDF(file: File): Promise<PurchaseOrder> {
     const formData = new FormData();
 
     formData.append("file", file);
@@ -18,7 +25,7 @@ export class ApiService {
     return response.json();
   }
 
-  static async calculateOrder(data: any) {
+  static async calculateOrder(data: PurchaseOrder): Promise<CalculationResult> {
     const response = await fetch(`${API_URL}/orders/calculate`, {
       method: "POST",
       headers: {
@@ -30,7 +37,7 @@ export class ApiService {
     return response.json();
   }
 
-  static async quoteOrder(data: any) {
+  static async quoteOrder(data: PurchaseOrder): Promise<QuoteResult> {
     const response = await fetch(`${API_URL}/orders/quote`, {
       method: "POST",
       headers: {
@@ -42,7 +49,7 @@ export class ApiService {
     return response.json();
   }
 
-  static async saveOrder(data: any) {
+  static async saveOrder(data: PurchaseOrder): Promise<PurchaseOrder> {
     const response = await fetch(`${API_URL}/orders/save`, {
       method: "POST",
       headers: {
