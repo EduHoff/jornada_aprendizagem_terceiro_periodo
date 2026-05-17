@@ -1,6 +1,6 @@
-import { User } from "src/domain/entities/User";
-import { UserRole } from "src/domain/enums/UserRole";
-import { UserRepository } from "src/infra/repositories/UserRepository";
+import { User } from "domain/entities/User";
+import { UserRole } from "domain/enums/UserRole";
+import { UserRepository } from "infra/repositories/UserRepository";
 
 export class CreateUserUseCase {
   constructor(private repository: UserRepository) {}

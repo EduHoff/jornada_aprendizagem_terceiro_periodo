@@ -18,9 +18,9 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["src/app/*"]
+      "@/*": ["*"]
     },
     "ignoreDeprecations": "6.0"
   },

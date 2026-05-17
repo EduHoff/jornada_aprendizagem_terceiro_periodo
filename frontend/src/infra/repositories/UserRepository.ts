@@ -1,5 +1,5 @@
-import { User } from "src/domain/entities/User";
-import { UserRole } from "src/domain/enums/UserRole";
+import { User } from "domain/entities/User";
+import { UserRole } from "domain/enums/UserRole";
 
 export class UserRepository {
   private apiUrl = "http://localhost:8000"; 

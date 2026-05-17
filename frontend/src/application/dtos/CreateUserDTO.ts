@@ -1,4 +1,4 @@
-import { UserRole } from "src/domain/enums/UserRole";
+import { UserRole } from "domain/enums/UserRole";
 
 export interface CreateUserDTO {
   name: string;
