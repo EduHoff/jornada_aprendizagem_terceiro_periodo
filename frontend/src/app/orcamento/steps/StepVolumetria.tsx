@@ -52,9 +52,6 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
 
     updated[index].type = vehicleType;
 
-    updated[index].capacity_m3 =
-      VEHICLE_CAPACITY[vehicleType];
-
     setEditableVehicles(updated);
   }
 
@@ -102,15 +99,6 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
   if (loading) {
     return <p style={{ textAlign: "center", padding: "20px" }}>Processando cubagem e alocando frota...</p>;
   }
-
-  const availableVehiclesToAdd = Object.values(
-    VehicleType
-  ).filter(
-    (type) =>
-      !editableVehicles.some(
-        (vehicle) => vehicle.type === type
-      )
-  );
 
   return (
     <>
@@ -183,11 +171,40 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
                     )}
                   </select>
                 </div>
+                
+                <div style={{ marginTop: "10px" }}>
+                    <label
+                      style={{
+                        fontWeight: "bold",
+                        display: "block",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      Capacidade (m³)
+                    </label>
 
-                <p>
-                  <strong>Capacidade:</strong>{" "}
-                  {vehicle.capacity_m3} m³
-                </p>
+                    <input
+                      type="number"
+                      min={1}
+                      value={vehicle.capacity_m3}
+                      onChange={(e) => {
+                        const updated = [...editableVehicles];
+
+                        updated[index].capacity_m3 = 
+                          e.target.value === ""
+                            ? "" as unknown as number
+                            : Number(e.target.value);
+
+                        setEditableVehicles(updated);
+                      }}
+                      style={{
+                        width: "140px",
+                        padding: "8px",
+                        borderRadius: "6px",
+                        border: "1px solid #ccc", 
+                      }}
+                    />
+                </div>
 
                 <div
                   style={{
@@ -240,16 +257,7 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
             ))}
 
             <div style={{ marginTop: "10px" }}>
-              {availableVehiclesToAdd.length === 0 ? (
-                <p
-                  style={{
-                    color: "#6b7280",
-                    fontStyle: "italic",
-                  }}
-                >
-                  Todos os veículos disponíveis já foram adicionados!
-                </p>
-              ) : !showVehicleSelector ? (
+              {!showVehicleSelector ? (
                 <button
                   style={styles.button}
                   onClick={() =>
@@ -280,11 +288,11 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
                       borderRadius: "6px",
                     }}
                     >
-                      <option value="">
+                      <option value="" disabled hidden>
                         Selecione um veículo
                       </option>
 
-                      {availableVehiclesToAdd.map(
+                      {Object.values(VehicleType).map(
                         (type) => (
                           <option
                             key={type}
