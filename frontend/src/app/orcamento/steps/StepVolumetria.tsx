@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { styles } from "../styles";
 import { WizardData } from "../types";
 import { Routes } from "@/api/Routes";
-import { PurchaseOrder } from "@/domain/entities/PurchaseOrder";
+import { ApiDataPayload, PurchaseOrder } from "@/domain/entities/PurchaseOrder";
 import { Vehicle } from "@/domain/entities/Vehicle";
 import { VehicleType } from "@/domain/enums/VehicleType";
 
@@ -23,6 +23,7 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
   const [loading, setLoading] = useState(true);
   const [updatedOrder, setUpdatedOrder] = useState<PurchaseOrder | null>(null);
   const [editableVehicles, setEditableVehicles] = useState<Vehicle[]>([]);
+  const [showVehicleSelector, setShowVehicleSelector] = useState(false);
 
   useEffect(() => {
     async function calculate() {
@@ -75,10 +76,10 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
     setEditableVehicles(updated);
   }
 
-  function addVehicle() {
+  function addVehicle(vehicleType: VehicleType) {
     const vehicle = new Vehicle(
-      VEHICLE_CAPACITY[VehicleType.TRUCK],
-      VehicleType.TRUCK,
+      VEHICLE_CAPACITY[vehicleType],
+      vehicleType,
       1
     );
 
@@ -86,6 +87,8 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
       ...editableVehicles,
       vehicle,
     ]);
+
+    setShowVehicleSelector(false);
   }
 
   function removeVehicle(index: number) {
@@ -99,6 +102,15 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
   if (loading) {
     return <p style={{ textAlign: "center", padding: "20px" }}>Processando cubagem e alocando frota...</p>;
   }
+
+  const availableVehiclesToAdd = Object.values(
+    VehicleType
+  ).filter(
+    (type) =>
+      !editableVehicles.some(
+        (vehicle) => vehicle.type === type
+      )
+  );
 
   return (
     <>
@@ -227,12 +239,74 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
               </div>
             ))}
 
-            <button
-              style={styles.button}
-              onClick={addVehicle}
-            >
-              + Adicionar Veículo
-            </button>
+            <div style={{ marginTop: "10px" }}>
+              {availableVehiclesToAdd.length === 0 ? (
+                <p
+                  style={{
+                    color: "#6b7280",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Todos os veículos disponíveis já foram adicionados!
+                </p>
+              ) : !showVehicleSelector ? (
+                <button
+                  style={styles.button}
+                  onClick={() =>
+                    setShowVehicleSelector(true)
+                  }
+                >
+                  + Adicionar Veículo
+                </button>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "center",
+                  }}
+                >
+                  <select
+                    defaultValue="" 
+                    onChange={(e) => {
+                      if (!e.target.value) return;
+
+                      addVehicle(
+                        e.target.value as VehicleType
+                      );
+                    }}
+                    style={{
+                      padding: "10px",
+                      borderRadius: "6px",
+                    }}
+                    >
+                      <option value="">
+                        Selecione um veículo
+                      </option>
+
+                      {availableVehiclesToAdd.map(
+                        (type) => (
+                          <option
+                            key={type}
+                            value={type}
+                          >
+                            {type}
+                          </option>
+                        )
+                      )}
+                  </select>
+
+                  <button
+                    style={styles.secondaryButton}
+                    onClick={() =>
+                      setShowVehicleSelector(false)
+                    }
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <p style={{ color: "orange" }}>
@@ -255,14 +329,18 @@ export function StepVolumetria({ data, next, back }: StepVolumetriaProps) {
           onClick={() => {
             if (!updatedOrder) return;
 
-            updatedOrder.vehicles.length = 0;
+            const updatedPurchaseOrder = PurchaseOrder.fromDict(
+              updatedOrder.toDict() as unknown as ApiDataPayload
+            );
+
+            updatedPurchaseOrder.vehicles.length = 0;
 
             editableVehicles.forEach((vehicle) => {
-              updatedOrder.add_vehicle(vehicle);
+              updatedPurchaseOrder.add_vehicle(vehicle);
             });
 
             next({
-              purchaseOrder: updatedOrder,
+              purchaseOrder: updatedPurchaseOrder,
             });
           }}
         >
